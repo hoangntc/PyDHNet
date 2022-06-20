@@ -1,0 +1,16 @@
+dataset/*
+!dataset/.gitkeep
+model/*
+!model/.gitkeep
+output/*
+!output/.gitkeep
+experiment/*
+misc/*
+*/lightning_logs/*
+*.ipynb_checkpoints
+*pyc
+*.ckpt
+*.DS_Store
+.vscode
+
+
