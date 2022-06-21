@@ -350,7 +350,7 @@ class SubgEncoder(nn.Module):
         Perform a single message-passing layer for the specified 'channel' and internal/border
         Returns:
             - cc_embed_matrix: updated connected component embedding matrix
-            - position_struc_out: property aware embedding matrix (for position & structure channels)
+            - position_struc_out: property aware embedding matrix
         '''
         # Get Anchor Patches
         anchor_patches, anchor_mask, anchor_embeds = get_anchor_patches(

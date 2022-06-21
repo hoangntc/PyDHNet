@@ -49,12 +49,7 @@ class GraphSnapshot:
             'subg_n_layers': 2,
             'n_triangular_walks': 10,
             'n_processes': 4,
-            'meta_paths': '0-1-0-1-0-1-0-1-0-1-0-1-0-1-0 \
-            1-0-1-0-1-0-1-0-1-0-1-0-1-0-1 \
-            1-2-1-2-1-2-1-2-1-2-1-2-1-2-1 \
-            1-3-1-3-1-3-1-3-1-3-1-3-1-3-1 \
-            2-1-2-1-2-1-2-1-2-1-2-1-2-1-2 \
-            0-1-2-1-0-1-2-1-0-1-2-1-0-1-2-1-0',
+            'meta_paths': '0-1-0 1-2-1 1-3-1 2-1-2 0-1-2-1-0',
         }
         default_params.update(params)
         self.hparams = copy.deepcopy(default_params)

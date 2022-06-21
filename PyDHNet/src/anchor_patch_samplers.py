@@ -50,12 +50,49 @@ def get_neighbors(networkx_graph, subgraph, all_valid_border_nodes, prev_node, c
 def is_nodetype_matching(nodeid_to_nodetype, node_id, node_type):
     return nodeid_to_nodetype[node_id] == node_type
 
-def get_metapath(meta_paths, starting_nodes, nodeid_to_nodetype):
-    starting_node_types = list(set([nodeid_to_nodetype[n] for n in starting_nodes]))
-    valid_meta_paths = [p for p in meta_paths if p[0] in starting_node_types]
-    random.shuffle(valid_meta_paths)
-    meta_path = valid_meta_paths[0]
-    return meta_path
+# def get_metapath(meta_paths, starting_nodes, nodeid_to_nodetype):
+#     starting_node_types = list(set([nodeid_to_nodetype[n] for n in starting_nodes]))
+#     valid_meta_paths = [p for p in meta_paths if p[0] in starting_node_types]
+#     random.shuffle(valid_meta_paths)
+#     meta_path = valid_meta_paths[0]
+#     return meta_path
+
+def parse_seq(meta_path, walk_len, starting_nodetype):
+
+	if starting_nodetype not in meta_path:
+		return []
+
+	first_idx = meta_path.index(starting_nodetype)
+
+	path_len = len(meta_path)
+	first_path_len = path_len - first_idx
+	repeated_path_len = path_len - 1
+
+	repeat_count = math.ceil((walk_len - first_path_len) / repeated_path_len)
+	first_seq = meta_path[first_idx:]
+	repeated_seq = meta_path[1:]
+
+	final_seq = first_seq
+	for i in range(repeat_count):
+		final_seq.extend(repeated_seq)
+
+	return final_seq
+
+def get_metapath(meta_paths, walk_len, starting_nodetype):
+	'''
+	Input:
+		- meta_paths: [['2', '1', '0', '1', '2'], ['0', '1', '0']] 
+		- walk_len: 10
+		- starting_nodetype: '2'
+	Output: 
+        Meta-path random walk with length=walk_len and starting node type=starting_nodetype
+		E.g., ['2', '1', '0', '1', '2', '1', '0', '1', '2', '1']
+	'''
+	valid_meta_paths = []
+	for meta_path in meta_paths:
+		valid_meta_paths += [parse_seq(meta_path, walk_len, starting_nodetype)]
+	random.shuffle(valid_meta_paths)
+	return valid_meta_paths[0]
 
 def triangular_random_walk(hparams, networkx_graph, meta_paths, nodeid_to_nodetype, anchor_patch_subgraph, walk_len, in_border_nodes, all_valid_nodes, inside):
     '''
@@ -79,9 +116,12 @@ def triangular_random_walk(hparams, networkx_graph, meta_paths, nodeid_to_nodety
     # print(anchor_patch_subgraph)
     if inside:
         # randomly sample a start node from the subgraph/graph
-        meta_path = get_metapath(meta_paths, list(anchor_patch_subgraph.nodes()), nodeid_to_nodetype)
-        prev_nodes = [n for n in list(anchor_patch_subgraph.nodes()) if is_nodetype_matching(nodeid_to_nodetype, n, meta_path[0])]
+        # meta_path = get_metapath(meta_paths, list(anchor_patch_subgraph.nodes()), nodeid_to_nodetype)
+        # prev_nodes = [n for n in list(anchor_patch_subgraph.nodes()) if is_nodetype_matching(nodeid_to_nodetype, n, meta_path[0])]
+        # prev_node = np.random.choice(prev_nodes)
+        prev_nodes = list(anchor_patch_subgraph.nodes())
         prev_node = np.random.choice(prev_nodes)
+        meta_path = get_metapath(meta_paths, walk_len, starting_nodetype=nodeid_to_nodetype[prev_node])
         # get all of the neighbors for the start node
         neighbor_nodes = list(anchor_patch_subgraph.neighbors(prev_node))
         neighbor_nodes = list([n for n in neighbor_nodes if is_nodetype_matching(nodeid_to_nodetype, n, meta_path[1])])
@@ -91,9 +131,11 @@ def triangular_random_walk(hparams, networkx_graph, meta_paths, nodeid_to_nodety
 
     else:
         # randomly sample a start node from the list of 'in_border_nodes" and restrict neighboring nodes to only those in 'all_valid_nodes'
-        meta_path = get_metapath(meta_paths, list(in_border_nodes), nodeid_to_nodetype)
-        filered_in_border_nodes = [n for n in in_border_nodes if is_nodetype_matching(nodeid_to_nodetype, n, meta_path[0])]
-        prev_node = np.random.choice(filered_in_border_nodes, 1)[0]
+        # meta_path = get_metapath(meta_paths, list(in_border_nodes), nodeid_to_nodetype)
+        # filered_in_border_nodes = [n for n in in_border_nodes if is_nodetype_matching(nodeid_to_nodetype, n, meta_path[0])]
+        # prev_node = np.random.choice(filered_in_border_nodes, 1)[0]
+        prev_node = np.random.choice(in_border_nodes, 1)[0]
+        meta_path = get_metapath(meta_paths, walk_len, starting_nodetype=nodeid_to_nodetype[prev_node])
         neighbor_nodes = [n for n in list(networkx_graph.neighbors(prev_node)) if n in all_valid_nodes]
         neighbor_nodes = list([n for n in neighbor_nodes if is_nodetype_matching(nodeid_to_nodetype, n, meta_path[1])])
         curr_node = np.random.choice(neighbor_nodes, 1)[0] if len(neighbor_nodes) > 0 else PAD_VALUE
@@ -102,6 +144,7 @@ def triangular_random_walk(hparams, networkx_graph, meta_paths, nodeid_to_nodety
     walk_len = min(len(meta_path), walk_len)
     # if the first node has no neighbors, the random walk is only length 1 & we return it immediately
     if curr_node == PAD_VALUE:
+        print('Length of random walk:', len(visited))
         return [prev_node]
     
     visited = [prev_node, curr_node]
@@ -132,6 +175,7 @@ def triangular_random_walk(hparams, networkx_graph, meta_paths, nodeid_to_nodety
         curr_node = next_node
         visited.append(next_node)
     # we return a list of the node ids visited during the walk
+    print('Length of random walk:', len(visited))
     return visited        
 
 #######################################################
