@@ -1,4 +1,5 @@
-dataset/*
+dataset/dblp_demo
+dataset/imdb
 !dataset/.gitkeep
 model/*
 !model/.gitkeep

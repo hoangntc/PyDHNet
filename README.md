@@ -65,11 +65,13 @@ where `${TORCH}` and `${CUDA}` is version of Pytorch and Cuda.
 ## Experimental replication
 
 ### Dataset
-Use dataset in the paper: 
-Use your own dataset: You need to prepare four files with the following format:
+You can run the demo with the DBLP dataset used in the paper, the data is in `dataset/dblp` folder.
+To use your own dataset, you need to prepare 
+    - One config file with json format named `data_name.json` and put in `PyDHNet/config`
+    - Four input files put under the folder `dataset` with the name  `data_name`
+
     1. node_types.csv: format of each row `node_id (int), node_type (int), node_type_name (str)`
 
-    E.g
     ```
     node_id,node_type,node_type_name
     0,0,author
@@ -80,7 +82,6 @@ Use your own dataset: You need to prepare four files with the following format:
     ```
     2. temporal_edge_list.txt: format of each row `source_node_id (int), target_node_id (int), time_id (int)`
 
-    E.g.
     ```
     1840 1 6
     1840 2 6
@@ -91,7 +92,6 @@ Use your own dataset: You need to prepare four files with the following format:
 
     3. temporal_subgraphs.pth: format of each row `subgraph_ids, time_id, label`
 
-    E.g.
     ```
     1883-90-105-12693-12812-13117-13235-13273-13682-14027-14158-14241-14387-14517	0	uai	
     1884-105-121-12736-12827-13072-13329-14517	0	uai	
@@ -99,8 +99,10 @@ Use your own dataset: You need to prepare four files with the following format:
     1930-242-243-13072-13228-13702-14073-14089-14311-14519	0	cikm	
     1972-346-347-12578-12693-12893-13437-13473-13595-13740-14421-14523	0	colt	
     ```
+
     4. data.pkl: a dictionary for train/val/test dataloader
-    E.g.
+    
+    ```
     data = {0: {
     'node_id': 800,
     'subgraph_idx': {0: [1, 2], 1: [4, 10], 2: [], 3: [8], 4: [99, 100, 101], 5: [7]},
@@ -109,7 +111,8 @@ Use your own dataset: You need to prepare four files with the following format:
     'time_id': 3,
     },
     }
-    
+    ```
+-     
 
 ### Usage
 
