@@ -66,7 +66,8 @@ where `${TORCH}` and `${CUDA}` is version of Pytorch and Cuda.
 
 ### Dataset
 You can run the demo with the DBLP dataset used in the paper, the data is in `dataset/dblp` folder.
-To use your own dataset, you need to prepare 
+To use your own dataset, you need to prepare:
+
     - One config file with json format named `data_name.json` and put in `PyDHNet/config`
     - Four input files put under the folder `dataset` with the name  `data_name`
 
@@ -112,7 +113,6 @@ To use your own dataset, you need to prepare
     },
     }
     ```
--     
 
 ### Usage
 
