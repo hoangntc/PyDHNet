@@ -71,6 +71,7 @@ To use your own dataset, you need to prepare:
     - One config file with json format named `data_name.json` and put in `PyDHNet/config`
     - Four input files put under the folder `dataset` with the name  `data_name`
 
+
     1. node_types.csv: format of each row `node_id (int), node_type (int), node_type_name (str)`
 
     ```
@@ -81,6 +82,7 @@ To use your own dataset, you need to prepare:
     3,0,author
     4,0,author
     ```
+    
     2. temporal_edge_list.txt: format of each row `source_node_id (int), target_node_id (int), time_id (int)`
 
     ```
