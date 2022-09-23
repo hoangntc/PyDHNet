@@ -1,7 +1,7 @@
 # PyDHNet: An Open-Source Toolkit for Dynamic Heterogeneous Network Representation Learning
 
 
-## Directory structure:
+## 1. Directory structure:
 
 ```
 .
@@ -29,14 +29,14 @@
 ```
 
 
-## Overall framework
+## 2. Overall framework
 
 ![Overall framework](/figs/overview.png)
 
 
-## Installation
+## 3. Installation
 
-### Libraries
+### 3.1 Libraries
 
 To install all neccessary libraries, please run:
 
@@ -47,11 +47,11 @@ conda env create -f environment.yml
 In case, the version of Pytorch and Cuda are not compatible on your machine, please remove all related lib in the `.yml` file; then install Pytorch and Pytorch Geometric separately. If you want to create an environment without using existing file, please refer to `installation.md` file. 
 
 
-### PyTorch
+### 3.2 PyTorch
 Please follow Pytorch installation instruction in this [link](https://pytorch.org/get-started/locally/).
 
 
-### Torch Geometric
+### 3.3 Torch Geometric
 ```bash
 pip install torch-scatter -f https://data.pyg.org/whl/torch-${TORCH}+${CUDA}.html
 pip install torch-sparse -f https://data.pyg.org/whl/torch-${TORCH}+${CUDA}.html
@@ -62,9 +62,9 @@ pip install torch-geometric
 where `${TORCH}` and `${CUDA}` is version of Pytorch and Cuda.
 
 
-## Experimental replication
+## 4. Experimental replication
 
-### Dataset
+### 4.1 Dataset
 You can run the demo with the DBLP dataset used in the paper, the data is in `dataset/dblp` folder. To use your own dataset, you need to prepare:
 
 - One config file with json format named `data_name.json` and put in `PyDHNet/config`
@@ -114,17 +114,16 @@ You can run the demo with the DBLP dataset used in the paper, the data is in `da
         }
         ```
 
-### Usage
+### 4.2 Usage
 
 #### Subgraph Sampler
 
 ```python
 from PyDHNet.subgraph_sampler import TemporalSubgraphSampler
-
 sampler = TemporalSubgraphSampler(
-    node_path,
-    edge_path, 
-    sampled_node_ids, 
+    node_path='/home/hoang/github/PyDHNet/dataset/dblp/node_types.csv',
+    edge_path='/home/hoang/github/PyDHNet/dataset/dblp/temporal_edge_list.txt', 
+    sampled_node_ids=[0, 1, 2], 
     max_size=5, 
     number_of_nodes=20,
     seed=0,
@@ -133,7 +132,6 @@ sampler = TemporalSubgraphSampler(
 
 sampler.sampling_temporal_subgraph()
 sampler.write_temporal_subgraphs()
-
 ```
 #### Network Representation Learning
 
@@ -164,7 +162,7 @@ pydhnet.train(data_module, model_module, trainer)
 
 # 3. Embedding generating
 restore_model_dir = str(pydhnet.config['checkpoint_dir'])
-restore_model_name = 'name.ckpt'
+restore_model_name = 'checkpoint_name.ckpt'
 output_dir = str(PROJ_PATH / 'output')
 pydhnet.generate_embedding(
     data_module, model_module, restore_model_dir, restore_model_name, output_dir)
