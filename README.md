@@ -67,8 +67,8 @@ where `${TORCH}` and `${CUDA}` is version of Pytorch and Cuda.
 ### 4.1 Dataset
 You can run the demo with the DBLP dataset used in the paper, the data is in `dataset/dblp` folder. To use your own dataset, you need to prepare:
 
-- One config file with json format named `data_name.json` and put in `PyDHNet/config`
-- Four input files put under the folder in `dataset/data_name`.
+- One config file with json format named `data_name.json` and put it in `PyDHNet/config`
+- Four input files put under the folder `dataset/data_name`.
 
     1. node_types.csv: format of each row `node_id (int), node_type (int), node_type_name (str)`
 
